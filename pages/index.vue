@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout>
-    <ListItems />
+    <ShoppingList />
   </NuxtLayout>
 </template>
 

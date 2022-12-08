@@ -1,62 +1,60 @@
 
 <script setup>
 
-const items = ref([
-  {
-    itemID: "item-1",
-    description: "Brot",
-    amount: 1,
-    packaging: "Glas",
-    additionalInfo: "Vollkorn lieber als Weißbrot",
-    category:"Kühl"
-  },
-  {
-    itemID: "item-2",
-    description: "Wurst",
-    amount: 10,
-    packaging: "Stück",
-    additionalInfo: "Nur Geflügel",
-    category:"Fleisch"
-  }
-])
+import { list } from 'postcss';
+
+
+const props = defineProps({
+  item: list
+})
 
 const newItem = ref("")
+
+const editable = ref(false)
+
+const edit = () => {
+  editable.value = !editable.value
+  //console.log("thisItem was checked")
+}
+
 
 
 </script>
 
 <template>
-  <div v-for="item in items" :key="item.itemID" class="card m-2">
-
-  <div class="card-header-new"> 
-    <div class=" columns is-mobile">
-      <div class="column is-one-fifth ">
-        <input 
-          type="number" 
-          class="is-size-6 has-text-weight-bold" 
-          v-model="item.amount"
-        >
+  {{ thisElement }}
+  <!-- Input für Item, wenn editable true -->
+    <div v-if="editable" class="edit-item"> 
+      <form action="">
+        <div class="columns is-mobile">
+          <div class="column is-1 bg-black">
+            <input 
+              type="number" 
+              class="is-size-6 has-text-weight-bold" 
+              v-model="item.amount"
+            >
+          </div>
+          <div class="column"> 
+            <input 
+              type="text" 
+              class="is-size-6 has-text-weight-bold	" 
+              v-model="item.description"
+            >
+          </div>
+          <div class="column"> 
+            <input 
+              type="drop" 
+              class="is-size-6 has-text-weight-bold	" 
+              v-model="item.description"
+            >
+          </div>
       </div>
-      <div class="column"> 
-        <input 
-          type="text" 
-          class="is-size-6 has-text-weight-bold	" 
-          v-model="item.description"
-        >
-      </div>
-      <div class="column"> 
-        <input 
-          type="text" 
-          class="is-size-6 has-text-weight-bold	" 
-          v-model="item.description"
-        >
-      </div>
+      </form>
     </div>
-  </div>
 
-  <header class="card-header"> 
-    <p class="card-header-title">
-        {{ item.amount }} x {{ item.description }} {{ this.additional }}
+  <header v-if="!editable" class="card-header" @click="edit()" > 
+    <p class="card-header-title" >
+        {{ item.amount }} x {{ item.description }} - {{ item.packaging }}
     </p>
     <button 
       class="card-header-icon" 
@@ -75,17 +73,26 @@ const newItem = ref("")
       {{ item.additionalInfo }}
     </div>
     </div>
-    <footer class="card-footer">
-      <a href="#" class="card-footer-item">Save</a>
-      <a href="#" class="card-footer-item">Edit</a>
-      <a href="#" class="card-footer-item">Delete</a>
+    <footer v-if="editable" class="card-footer">
+      <a 
+        href="#" 
+        @click="edit()"
+        class="card-footer-item">Save</a>
+      <a 
+        href="#"
+        @click="edit()"
+        class="card-footer-item">Edit</a>
+      <a 
+        href="#" 
+        class="card-footer-item">Delete</a>
     </footer>
   </div>
-
-</div>
 </template>
 
 <style lang="sass">
+.edit-item
+  background-color: gray
+
 .card-header-new
   box-shadow: 0 0.125em 0.25em rgb(10 10 10 / 10%)
 
